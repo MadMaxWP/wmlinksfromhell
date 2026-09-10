@@ -30,7 +30,7 @@ True when the parsed node is an external-link node.
 True when the wikilink has a leading colon.
 
 Destination checks
------------
+------------------
 
 .. autoattribute:: WMLink.is_wikimedia
 
