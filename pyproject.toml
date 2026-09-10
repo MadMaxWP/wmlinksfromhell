@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=77.0.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wmlinksfromhell"
+version = "0.1.1"
+description = "A library for resolving and working with Wikimedia and MediaWiki links."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+authors = [
+    { name = "Max", email = "madmax.wp@proton.me" },
+]
+keywords = ["mediawiki", "wikimedia", "wikipedia", "interwiki", "wikitext", "links", "parser", "resolver"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Text Processing :: Markup",
+    "Topic :: Internet",
+]
+dependencies = [
+    "mwparserfromhell>=0.6",
+]
+
+[project.optional-dependencies]
+pywikibot = ["pywikibot>=8.0"]
+dev = ["pytest>=7.0", "pytest-cov"]
+
+[project.urls]
+Documentation = "https://wmlinksfromhell.readthedocs.io/en/latest/"
+Repository = "https://github.com/MadMaxWP/wmlinksfromhell"
+Issues = "https://github.com/MadMaxWP/wmlinksfromhell/issues"
+Changelog = "https://github.com/MadMaxWP/wmlinksfromhell/blob/main/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+include = ["wmlinksfromhell*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "live: tests that hit the real Wikimedia network (deselect with -m 'not live')",
+]
+addopts = "-m 'not live'"
+
+[tool.mypy]
+python_version = "3.9"
+ignore_missing_imports = true

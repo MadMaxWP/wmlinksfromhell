@@ -1,0 +1,14 @@
+== Manual requests ==
+=== Update a common gadget ===
+<!-- Examples:
+* [[:q:fr:Casino Wins Today]]: Spam. ~~~~
+* [https://fr.wikiquote.org/wiki/Casino_Wins_Today]: Spam. ~~~~
+-->
+* Please delete [[:wikt:dv:Afrikaans]]: No useful content. <small>[[:m:Special:MyLanguage/User:TenWhile6/XReport|XReport]]</small> --'''[[User:Pristome|<span style="color:#739042;">Pr</span>]][[User talk:Pristome|<span style="color:#890842;">is</span>]][[Special:Contributions/Pristome|<span style="color:#304530;">tome</span>]]'''
+* Please delete [[:w:ms:Chokka Thangam (TV Series]]: Wrong language <small>[[:m:Special:MyLanguage/User:TenWhile6/XReport|XReport]]</small> --[[User:enbi|enbi]]
+* Please block {{LockHide|1=~2026-48350-76|2=wikt:it:}}: Long-term abuse. [[User:Àncilu|Àncilu]] ([[User talk:Àncilu|talk]])
+* Please delete [[:w:tk:Faýl:Lacyn.jpeg]]: Unused Copyrighted files + Missing license [[User:Sakura emad|Sakura emad]]
+See [[mw:Snippets/Direct imagelinks to Commons]] and [[phab:T197137]].
+See https://en.wikipedia.org/wiki/MediaWiki:Gadget-imagelinks.js?x=1#A_section
+See https://en.wikipedia.org/w/index.php?title=MediaWiki:Gadget-imagelinks.js&diff=prev&oldid=1358485525
+See https://example.com/not-wikimedia
