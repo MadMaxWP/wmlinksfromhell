@@ -1,0 +1,5 @@
+-e .[dev,pywikibot]
+build>=1.2
+twine>=6.0
+Sphinx>=7.4.7,<8
+sphinx-rtd-theme>=3,<4

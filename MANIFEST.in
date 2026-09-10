@@ -1,0 +1,13 @@
+include README.md
+include LICENSE
+include CHANGELOG.md
+include MANIFEST.in
+include requirements-dev.txt
+recursive-include examples *.py
+recursive-include tests *.py *.txt
+prune build
+prune dist
+prune dist_sdist
+prune wmlinksfromhell.egg-info
+prune .venv
+prune docs
