@@ -21,3 +21,9 @@ Project links
 * `GitHub <https://github.com/MadMaxWP/wmlinksfromhell>`_
 * `Issues <https://github.com/MadMaxWP/wmlinksfromhell/issues>`_
 * `PyPI <https://pypi.org/project/wmlinksfromhell/>`_
+
+Indices and tables
+------------------
+
+* :ref:`genindex`
+* :ref:`search`
