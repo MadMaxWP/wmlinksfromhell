@@ -76,6 +76,12 @@ def test_commons_file_url(metadata):
     assert dest.title == "Example.jpg"
 
 
+def test_legacy_image_namespace_normalizes_to_file(metadata):
+    image, _ = parse_url("https://en.wikipedia.org/wiki/Image:Example.png", metadata)
+    file, _ = parse_url("https://en.wikipedia.org/wiki/File:Example.png", metadata)
+    assert image.namespace == file.namespace == "File"
+
+
 def test_wikidata_item_url(metadata):
     dest, _ = parse_url("https://www.wikidata.org/wiki/Q42", metadata)
     assert dest.dbname == "wikidatawiki"
