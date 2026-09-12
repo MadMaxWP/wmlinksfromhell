@@ -367,6 +367,15 @@ class WMLink:
                 elif self.destination != target:
                     return False
                 continue
+            if key.endswith("_in"):
+                attr = key[:-3]
+                actual = getattr(self, attr, object())
+                if hasattr(actual, "value"):
+                    actual = actual.value
+                values = {v.value if hasattr(v, "value") else v for v in expected}
+                if actual not in values:
+                    return False
+                continue
             actual = getattr(self, key, object())
             if hasattr(expected, "value"):
                 expected = expected.value
@@ -390,23 +399,30 @@ class WMLink:
             value = self.syntax_type == SyntaxType.LOCAL_WIKILINK.value
         return value == bool(expected)
 
-    def convert(self, to: str, source: Any = None) -> "WMLink":
+    def set_label(self, text: Optional[str]) -> None:
+        if self.is_wikilink:
+            new_text = f"[[{self.raw}|{text}]]" if text else f"[[{self.raw}]]"
+        else:
+            new_text = f"[{self.raw} {text}]" if text else f"[{self.raw}]"
+        self._replace(new_text)
+
+    def convert(self, to: str, source: Any = None, long_project_prefix: bool = False) -> "WMLink":
         # keep the common conversion entry point tiny and obvious
         target = to.casefold()
         if target in {"url", "external"}:
             self.set_url()
         elif target in {"interwiki", "iw"}:
-            self.set_interwiki(source)
+            self.set_interwiki(source, long_project_prefix=long_project_prefix)
         elif target in {"local", "wikilink"}:
             self.set_local(source)
         else:
             raise ValueError("to must be 'url', 'interwiki', or 'local'")
         return self
 
-    def set_interwiki(self, source: Any = None) -> None:
+    def set_interwiki(self, source: Any = None, long_project_prefix: bool = False) -> None:
         self._require_clickable_link()
         destination = self._require_resolved()
-        target = self._resolver.to_interwiki(destination, source or self._source)
+        target = self._resolver.to_interwiki(destination, source or self._source, long_project_prefix=long_project_prefix)
         self._replace_wikilink(target)
 
     def set_url(self) -> None:
