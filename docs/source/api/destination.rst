@@ -77,3 +77,17 @@ Identity and operation helpers
 * ``same_page_as()``
 * ``as_dict()``
 * ``as_json()``
+
+Serialization
+-------------
+
+``from_dict()`` reconstructs a destination from the mapping returned by
+``as_dict()``, including conversion of the destination type and query
+parameters back to their native types. ``as_dict()`` and ``as_json()`` remain
+available for serialization.
+
+Destination type checks
+-----------------------
+
+``is_wiki``, ``is_external``, and ``is_unknown`` provide direct boolean checks
+for the corresponding destination types.
