@@ -16,6 +16,21 @@ def test_url_to_interwiki_with_fragment(resolver):
     assert text == "w:en:Page name#Section"
 
 
+def test_url_to_interwiki_with_long_project_prefix(resolver):
+    result = resolver.resolve_url("https://hi.wikipedia.org/wiki/Apple")
+    assert resolver.to_interwiki(result.destination, long_project_prefix=True) == "wikipedia:hi:Apple"
+    assert resolver.resolve_url("https://hi.wikipedia.org/wiki/Apple", long_project_prefix=True).canonical_interwiki == "wikipedia:hi:Apple"
+
+
+def test_long_project_language_interwiki_resolves_and_converts(resolver):
+    result = resolver.resolve_interwiki("wikipedia:hi:Apple")
+    assert result.destination.dbname == "hiwiki"
+    assert result.canonical_prefix == "w:hi"
+    assert result.canonical_interwiki == "w:hi:Apple"
+    assert resolver.to_interwiki(result.destination) == "w:hi:Apple"
+    assert resolver.to_interwiki(result.destination, long_project_prefix=True) == "wikipedia:hi:Apple"
+
+
 def test_commons_url_to_interwiki(resolver):
     result = resolver.resolve_url("https://commons.wikimedia.org/wiki/File:Example.jpg")
     text = resolver.to_interwiki(result.destination)
