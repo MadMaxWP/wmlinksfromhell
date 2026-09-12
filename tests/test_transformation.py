@@ -77,6 +77,13 @@ def test_bracketed_external_link_with_label_becomes_bracketed_interwiki(metadata
     assert str(code) == "[[:w:en:Apple|fruit]]"
 
 
+def test_url_to_long_project_interwiki_conversion(metadata):
+    code = wm.parse("https://hi.wikipedia.org/wiki/Apple", metadata=metadata)
+    link = code.filter_links()[0]
+    link.set_interwiki(long_project_prefix=True)
+    assert str(code) == "[[:wikipedia:hi:Apple]]"
+
+
 def test_unresolved_link_cannot_be_transformed(metadata):
     code = wm.parse("[[:en:Apple]]", metadata=metadata)  # no source, ambiguous
     link = code.filter_links()[0]
