@@ -71,6 +71,13 @@ class Destination:
     def as_json(self) -> str:
         return json.dumps(self.as_dict(), sort_keys=True, ensure_ascii=False)
 
+    @classmethod
+    def from_dict(cls, data: dict) -> "Destination":
+        data = dict(data)
+        data["destination_type"] = DestinationType(data["destination_type"])
+        data["query_parameters"] = tuple(tuple(pair) for pair in data["query_parameters"])
+        return cls(**data)
+
     @property
     def full_title(self) -> Optional[str]:
         if self.title is None:
@@ -123,3 +130,15 @@ class Destination:
     @property
     def is_action(self) -> bool:
         return self.action is not None
+
+    @property
+    def is_wiki(self) -> bool:
+        return self.destination_type is DestinationType.WIKI
+
+    @property
+    def is_external(self) -> bool:
+        return self.destination_type is DestinationType.EXTERNAL
+
+    @property
+    def is_unknown(self) -> bool:
+        return self.destination_type is DestinationType.UNKNOWN
