@@ -17,6 +17,7 @@ Functions
 .. autofunction:: to_interwiki
 .. autofunction:: to_local
 .. autofunction:: wiki
+.. autofunction:: wikis
 .. autofunction:: interwiki
 .. autofunction:: url
 .. autofunction:: link
