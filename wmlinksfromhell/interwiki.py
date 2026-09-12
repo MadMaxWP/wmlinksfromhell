@@ -116,7 +116,7 @@ def _canonical_chain(prefixes: list[str], kinds: list[str], destinations: list[O
     for prefix, kind, destination in zip(prefixes, kinds, destinations):
         if kind == "project" and destination is not None:
             key = prefix.casefold()
-            if key in constants.FAMILY_PREFIXES:
+            if key in constants.FAMILY_PREFIXES or key in constants.MULTILINGUAL_FAMILY_NAMES:
                 parts.append(_preferred_family_prefix(destination.family))
             elif key in constants.SINGLE_WIKI_PREFIXES:
                 parts.append(prefix)
@@ -322,7 +322,7 @@ def resolve_chain(raw_target: str, source: Optional[WikiInfo], metadata: Metadat
             continue
 
         entry = active_map.get(segment)
-        family = active_map.family_prefixes.get(key)
+        family = active_map.family_prefixes.get(key) or (key if key in constants.MULTILINGUAL_FAMILY_NAMES and i + 2 < len(segments) and metadata.is_known_language(segments[i + 1]) else None)
         single = active_map.single_wiki_prefixes.get(key)
         service = active_map.service_prefixes.get(key)
         chapter = active_map.chapter_prefixes.get(key)
@@ -346,7 +346,7 @@ def resolve_chain(raw_target: str, source: Optional[WikiInfo], metadata: Metadat
                 "matched a local namespace",
             )
 
-        if entry is not None and "$1" not in entry.url:
+        if entry is not None and "$1" not in entry.url and family is None:
             if i != len(segments) - 1:
                 return ChainResult(
                     None,
@@ -704,6 +704,7 @@ def render_interwiki_target(
     destination: Destination,
     metadata: MetadataStore,
     source: Optional[WikiInfo] = None,
+    long_project_prefix: bool = False,
 ) -> str:
     suffix = f"#{destination.fragment}" if destination.fragment else ""
     if destination.destination_type is DestinationType.ORGANIZATION:
@@ -799,7 +800,7 @@ def render_interwiki_target(
             )
         return f"{prefix}:{title}{suffix}"
     if wiki.family in PREFERRED_FAMILY_PREFIX:
-        prefix = PREFERRED_FAMILY_PREFIX[wiki.family]
+        prefix = wiki.family if long_project_prefix else PREFERRED_FAMILY_PREFIX[wiki.family]
         language = metadata.interwiki_language_for_wiki(wiki)
         if title is None:
             title = destination.full_title
