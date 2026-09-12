@@ -69,3 +69,25 @@ def test_known_wikimedia_host_with_unrecognized_route_is_not_ordinary_external(r
     assert result.status is ResolutionStatus.UNSUPPORTED
     assert result.destination.destination_type is DestinationType.UNKNOWN
     assert result.destination.is_wikimedia_project is True
+
+
+def test_resolution_result_as_json_matches_as_dict_json(resolver):
+    import json
+
+    result = resolver.resolve(":w:en:Apple")
+
+    assert result.as_json() == json.dumps(result.as_dict(), sort_keys=True, ensure_ascii=False)
+
+
+def test_resolve_many_matches_individual_resolution(resolver):
+    values = [":w:en:Apple", ":w:de:Berlin"]
+
+    results = resolver.resolve_many(values)
+
+    assert [result.destination for result in results] == [resolver.resolve(value).destination for value in values]
+
+
+def test_resolve_many_passes_source_to_each_resolution(resolver):
+    results = resolver.resolve_many(["Apple", "Banana"], source="enwiki")
+
+    assert [result.dbname for result in results] == ["enwiki", "enwiki"]
