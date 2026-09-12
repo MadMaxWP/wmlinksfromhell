@@ -64,7 +64,7 @@ def to_interwiki(destination: Destination, source=None, metadata: MetadataStore 
 def to_local(destination: Destination, source=None, metadata: MetadataStore = None) -> str:
     return Resolver(metadata).to_local(destination, source=source)
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 __all__ = [
     "parse", "parse_page", "resolve", "resolve_url", "resolve_interwiki", "to_url", "to_interwiki", "to_local", "wiki", "wikis", "interwiki", "url", "link", "Code", "Link", "Wiki", "Metadata", "Result", "WMCode", "WMLink", "Resolver", "ResolutionResult", "MetadataStore", "MetadataCache",
