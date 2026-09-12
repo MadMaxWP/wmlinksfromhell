@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.2 — 2026-09-12
+
+Expanded the public API with serialization, batch resolution, metadata enumeration, filtering, link-label editing, and a minimal command-line interface.
+
+- Added destination and resolution-result JSON/dict symmetry helpers.
+- Added batch resolution and metadata/interwiki enumeration helpers.
+- Added membership-style link matching and destination collection helpers.
+- Added destination type convenience properties.
+- Added in-place link-label editing.
+- Added metadata freshness and membership checks.
+- Added `python -m wmlinksfromhell resolve` command-line support.
+- Fixed canonical namespace fallback casing.
+- Added optional long Wikimedia project prefixes such as `wikipedia:hi:Apple` for resolution and interwiki conversion while preserving the default short forms.
+
 ## 0.1.1 — 2026-09-10
 
 Small documentation and robustness fixes following final pre-release review.
