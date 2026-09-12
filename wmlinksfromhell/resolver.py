@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import dataclasses
+import json
 from typing import Any, Optional
 from urllib.parse import urlsplit
 
@@ -102,6 +103,9 @@ class ResolutionResult:
     def is_action(self) -> bool:
         return bool(self.destination and self.destination.is_action)
 
+    def as_json(self) -> str:
+        return json.dumps(self.as_dict(), sort_keys=True, ensure_ascii=False)
+
     def as_dict(self) -> dict:
         return {
             "raw": self.raw,
@@ -148,7 +152,7 @@ class Resolver:
                 return None
         return None
 
-    def resolve_url(self, value: str, source: Any = None, strict: bool = False) -> ResolutionResult:
+    def resolve_url(self, value: str, source: Any = None, strict: bool = False, long_project_prefix: bool = False) -> ResolutionResult:
         source_wiki = self.metadata.resolve_source(source)
         destination, reason = url_module.parse_url(value, self.metadata)
         if destination is not None:
@@ -168,7 +172,7 @@ class Resolver:
                 except Exception:
                     canonical_url = destination.canonical_url
                 try:
-                    canonical_interwiki = self.to_interwiki(destination, source_wiki)
+                    canonical_interwiki = self.to_interwiki(destination, source_wiki, long_project_prefix=long_project_prefix)
                 except Exception:
                     canonical_interwiki = None
                 result = ResolutionResult(
@@ -214,7 +218,7 @@ class Resolver:
                 result = ResolutionResult(value, SyntaxType.BARE_URL, ResolutionStatus.MALFORMED, reason, None, source_wiki, 0.0)
         return self._strict(result, strict)
 
-    def resolve_interwiki(self, value: str, source: Any = None, strict: bool = False) -> ResolutionResult:
+    def resolve_interwiki(self, value: str, source: Any = None, strict: bool = False, long_project_prefix: bool = False) -> ResolutionResult:
         source_wiki = self.metadata.resolve_source(source)
         chain = interwiki.resolve_chain(
             value,
@@ -230,13 +234,16 @@ class Resolver:
             except Exception:
                 canonical_url = chain.destination.canonical_url
             try:
-                canonical_interwiki = self.to_interwiki(chain.destination, source_wiki)
+                canonical_interwiki = self.to_interwiki(chain.destination, source_wiki, long_project_prefix=long_project_prefix)
             except Exception:
                 canonical_interwiki = None
         result = ResolutionResult(value, syntax, chain.status, chain.reason, chain.destination, source_wiki, _CONFIDENCE[chain.status], chain.prefix, chain.canonical_prefix, chain.prefix_kind, canonical_url, canonical_interwiki)
         return self._strict(result, strict)
 
-    def resolve(self, value: str, source: Any = None, strict: bool = False) -> ResolutionResult:
+    def resolve_many(self, values: list[str], source: Any = None) -> list[ResolutionResult]:
+        return [self.resolve(value, source=source) for value in values]
+
+    def resolve(self, value: str, source: Any = None, strict: bool = False, long_project_prefix: bool = False) -> ResolutionResult:
         if not isinstance(value, str):
             raise TypeError("resolve() expects a string")
         stripped = value.strip()
@@ -244,8 +251,8 @@ class Resolver:
         prefix = stripped.split(":", 1)[0].casefold() if ":" in stripped else ""
         known = prefix in self.metadata.interwiki_map(source) if prefix else False
         if stripped.startswith(("//", "http://", "https://", "ftp://")) or (scheme and not known and scheme in {"mailto", "tel", "sms", "ssh", "irc", "ircs", "news", "skype"}):
-            return self.resolve_url(stripped, source, strict)
-        return self.resolve_interwiki(stripped, source, strict)
+            return self.resolve_url(stripped, source, strict, long_project_prefix)
+        return self.resolve_interwiki(stripped, source, strict, long_project_prefix)
 
     @staticmethod
     def _strict(result: ResolutionResult, strict: bool) -> ResolutionResult:
@@ -256,8 +263,8 @@ class Resolver:
     def to_url(self, destination: Destination) -> str:
         return url_module.build_url(destination, self.metadata)
 
-    def to_interwiki(self, destination: Destination, source: Any = None) -> str:
-        return interwiki.render_interwiki_target(destination, self.metadata, self.metadata.resolve_source(source))
+    def to_interwiki(self, destination: Destination, source: Any = None, long_project_prefix: bool = False) -> str:
+        return interwiki.render_interwiki_target(destination, self.metadata, self.metadata.resolve_source(source), long_project_prefix=long_project_prefix)
 
     def to_local(self, destination: Destination, source: Any = None) -> str:
         source_wiki = self.metadata.resolve_source(source)
