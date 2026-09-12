@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.1.3
+-----
+
+Fixed legacy ``Image:`` namespace links returning the namespace as ``file`` instead of the canonical ``File`` casing.
+
 0.1.2
 -----
 
