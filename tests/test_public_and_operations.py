@@ -14,6 +14,7 @@ def test_public_api_is_available_from_top_level():
         "interwiki",
         "url",
         "link",
+        "wikis",
         "MetadataStore",
         "Metadata",
         "Resolver",
@@ -225,3 +226,39 @@ def test_link_line_number_handles_nested_nodes():
     assert links[0].line_text == "{{box|value=[[Foo]]}}"
     assert links[1].line_number == 2
     assert links[1].line_text == "[[Foo]]"
+
+
+def test_top_level_wikis_delegates_to_metadata(metadata):
+    assert wm.wikis(metadata=metadata) == metadata.all_wikis()
+
+
+def test_set_label_keeps_wikilink_target():
+    code = wm.parse("[[:w:en:Apple|Old]]")
+    link = code.filter_links()[0]
+
+    link.set_label("New")
+
+    assert str(code) == "[[:w:en:Apple|New]]"
+    assert link.raw == ":w:en:Apple"
+    assert link.label == "New"
+
+
+def test_set_label_removes_wikilink_label():
+    code = wm.parse("[[w:en:Apple|Old]]")
+    link = code.filter_links()[0]
+
+    link.set_label(None)
+
+    assert str(code) == "[[w:en:Apple]]"
+    assert link.label is None
+
+
+def test_set_label_keeps_external_link_target():
+    code = wm.parse("[https://example.org/ Old]")
+    link = code.filter_links()[0]
+
+    link.set_label("New")
+
+    assert str(code) == "[https://example.org/ New]"
+    assert link.raw == "https://example.org/"
+    assert link.label == "New"
