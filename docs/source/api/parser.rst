@@ -8,3 +8,9 @@ Parser and parsed code
    :special-members: __init__
 
 .. autofunction:: parse
+
+Destination collection
+----------------------
+
+``WMCode.destinations`` returns the resolved, non-``None`` destinations for
+the parsed links.
