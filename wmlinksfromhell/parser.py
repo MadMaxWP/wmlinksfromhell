@@ -7,6 +7,7 @@ from typing import Any, Callable, Optional
 import mwparserfromhell
 from mwparserfromhell.nodes import ExternalLink, Wikilink
 
+from .destination import Destination
 from .metadata import MetadataStore
 from .nodes import WMLink
 from .resolver import Resolver
@@ -22,6 +23,10 @@ class WMCode:
     @property
     def links(self) -> list[WMLink]:
         return self.filter_links()
+
+    @property
+    def destinations(self) -> list["Destination"]:
+        return [link.destination for link in self.filter_links() if link.destination is not None]
 
     def _make_links(
         self,
