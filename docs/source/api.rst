@@ -39,6 +39,7 @@ Main public API
    to_interwiki
    to_local
    wiki
+   wikis
    interwiki
    url
    link
