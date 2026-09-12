@@ -730,3 +730,40 @@ def test_metadata_parsers_ignore_malformed_rows(metadata):
     })
     assert "user" in names
     assert aliases["benutzer"] == "User"
+
+
+def test_wikis_for_family_is_case_insensitive(metadata):
+    wikis = metadata.wikis_for_family("WiKiPeDiA")
+
+    assert wikis
+    assert all(wiki.family == "wikipedia" for wiki in wikis)
+    assert metadata.wikis_for_family("does-not-exist") == ()
+
+
+def test_languages_returns_a_copy(metadata):
+    languages = metadata.languages()
+
+    assert languages["en"] == "English"
+    languages["en"] = "Changed"
+    assert metadata.language_name("en") == "English"
+
+
+def test_canonical_namespaces_returns_display_names(metadata):
+    namespaces = metadata.canonical_namespaces("enwiki")
+
+    assert "Category" in namespaces
+    assert "User talk" in namespaces
+    assert "File" in namespaces
+    assert "File talk" in namespaces
+    assert "File Talk" not in namespaces
+    assert "category" not in namespaces
+    assert "category" in metadata.namespace_names("enwiki")
+
+
+def test_metadata_contains_known_and_unknown_wikis(metadata):
+    assert "enwiki" in metadata
+    assert "does-not-exist" not in metadata
+
+
+def test_metadata_is_stale_delegates_to_cache(metadata):
+    assert metadata.is_stale(3600) is True
