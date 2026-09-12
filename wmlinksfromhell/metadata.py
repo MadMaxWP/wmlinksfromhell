@@ -105,6 +105,9 @@ class InterwikiMap:
         key = prefix.casefold()
         return key in self.entries or key in self.family_prefixes or key in self.single_wiki_prefixes or key in self.service_prefixes or key in self.chapter_prefixes
 
+    def prefixes(self) -> frozenset[str]:
+        return frozenset(self.entries) | frozenset(self.family_prefixes) | frozenset(self.single_wiki_prefixes) | frozenset(self.service_prefixes) | frozenset(self.chapter_prefixes)
+
 
 def _normalized_wiki_info(wiki: WikiInfo) -> WikiInfo:
     """repair stable wiki identity fields that may be stale in an older cache."""
@@ -223,6 +226,10 @@ class MetadataStore:
         key = code.casefold()
         return key in self._languages or any(alias == key for _family, alias in self._family_language_aliases)
 
+    def languages(self) -> dict[str, str]:
+        """Return a copy of the known {language_code: language_name} mapping."""
+        return dict(self._languages)
+
     def wiki_for_family_language(self, family: str, language: str) -> Optional[WikiInfo]:
         family = family.casefold()
         language = language.casefold()
@@ -260,8 +267,15 @@ class MetadataStore:
     def namespace_aliases(self, dbname: Optional[str]) -> dict[str, str]:
         return self._namespace_aliases.get(dbname or "", constants.NAMESPACE_ALIASES)
 
+    def canonical_namespaces(self, dbname: Optional[str]) -> frozenset[str]:
+        aliases = self.namespace_aliases(dbname)
+        return frozenset((value := aliases.get(name, name))[:1].upper() + value[1:] for name in self.namespace_names(dbname))
+
     def is_namespace(self, text: str, source: Optional[WikiInfo]) -> bool:
         return text.casefold() in self.namespace_names(source.dbname if source else None)
+
+    def __contains__(self, dbname: str) -> bool:
+        return self.wiki_by_dbname(dbname) is not None
 
     def interwiki_map(self, source: Any = None) -> InterwikiMap:
         source_wiki = source if isinstance(source, WikiInfo) else self.resolve_source(source) if source is not None else None
@@ -478,6 +492,13 @@ class MetadataStore:
             normalized.append(wiki)
         return tuple(normalized)
 
+    def wikis_for_family(self, family: str) -> tuple[WikiInfo, ...]:
+        family = family.casefold()
+        return tuple(w for w in self.all_wikis() if w.family.casefold() == family)
+
+    def is_stale(self, max_age_seconds: float) -> bool:
+        return self.cache.is_expired(max_age_seconds)
+
     def interwiki_language_for_wiki(self, wiki: WikiInfo) -> str:
         return self._family_language_prefixes.get((wiki.family.casefold(), wiki.dbname), wiki.language)
 
@@ -677,7 +698,7 @@ class MetadataStore:
         return True
 
     def _fetch_text(self, url: str, meta: dict, timeout: float, force: bool, retries: int) -> tuple[str, dict, bool]:
-        headers = {"User-Agent": "wmlinksfromhell/0.1.1 (Wikimedia link resolver)"}
+        headers = {"User-Agent": "wmlinksfromhell/0.1.2 (Wikimedia link resolver)"}
         if not isinstance(meta, dict):
             meta = {}
         if not force:
@@ -840,7 +861,7 @@ class MetadataStore:
         return True
 
     def _fetch_json(self, url: str, meta: dict, timeout: float, force: bool, retries: int) -> tuple[dict, dict, bool]:
-        headers = {"User-Agent": "wmlinksfromhell/0.1.1 (Wikimedia link resolver)"}
+        headers = {"User-Agent": "wmlinksfromhell/0.1.2 (Wikimedia link resolver)"}
         if not isinstance(meta, dict):
             meta = {}
         if not force:
