@@ -33,4 +33,13 @@ Lower-level interwiki results and helpers
 
 .. autofunction:: render_interwiki_target
 
+``long_project_prefix=True`` renders a full project name such as
+``wikipedia:hi:Apple`` instead of the default ``w:hi:Apple``.
+
 .. autofunction:: render_local_target
+
+Prefix enumeration
+------------------
+
+``InterwikiMap.prefixes()`` returns the known interwiki prefixes for the map as
+a read-only set.
