@@ -495,3 +495,12 @@ def test_fixed_wiki_prefix_with_unknown_host_does_not_fall_back_to_local(resolve
     )
     result = resolver.resolve_interwiki("mystery")
     assert result.status is ResolutionStatus.METADATA_MISSING
+
+
+def test_interwiki_map_prefixes_enumerates_supported_prefixes(metadata):
+    prefixes = metadata.interwiki_map("enwiki").prefixes()
+
+    assert isinstance(prefixes, frozenset)
+    assert "w" in prefixes
+    assert "wikipedia" in prefixes
+    assert "c" in prefixes
