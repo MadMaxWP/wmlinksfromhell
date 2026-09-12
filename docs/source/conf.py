@@ -9,8 +9,8 @@ sys.path.insert(0, str(ROOT))
 project = "wmlinksfromhell"
 author = "Max"
 copyright = "2026, Max"
-version = "0.1.1"
-release = "0.1.1"
+version = "0.1.2"
+release = "0.1.2"
 
 extensions = [
     "sphinx.ext.autodoc",
