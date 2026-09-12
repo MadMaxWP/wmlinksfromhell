@@ -62,3 +62,12 @@ def test_short_public_names_are_available():
     assert wm.Wiki is wm.WikiInfo
     assert wm.Metadata is wm.MetadataStore
     assert wm.Result is wm.ResolutionResult
+
+
+def test_destinations_returns_resolved_destinations(metadata):
+    import wmlinksfromhell as wm
+
+    code = wm.parse("[[w:en:Apple]] [[w:de:Berlin]] https://example.org/ [[unknown:Foo]]", metadata=metadata)
+
+    assert [destination.dbname for destination in code.destinations if destination.dbname] == ["enwiki", "dewiki"]
+    assert len(code.destinations) == 4
