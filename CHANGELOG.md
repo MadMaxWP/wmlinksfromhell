@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3 — 2026-09-12
+
+Fixed legacy `Image:` namespace links returning the namespace as `file` instead of the canonical `File` casing.
+
 ## 0.1.2 — 2026-09-12
 
 Expanded the public API with serialization, batch resolution, metadata enumeration, filtering, link-label editing, and a minimal command-line interface.
