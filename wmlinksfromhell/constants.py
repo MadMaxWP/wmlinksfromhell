@@ -227,7 +227,7 @@ COMMON_NAMESPACE_NAMES = frozenset({
     "portal", "portal talk", "draft", "draft talk", "timedtext", "timedtext talk", "gadget", "gadget talk", "widget", "widget talk",
 })
 
-NAMESPACE_ALIASES = {"image": "file", "image talk": "file talk"}
+NAMESPACE_ALIASES = {"image": "File", "image talk": "File talk"}
 
 PREFERRED_FAMILY_PREFIX = {
     "wikipedia": "w", "wiktionary": "wikt", "wikinews": "n", "wikibooks": "b", "wikiquote": "q", "wikisource": "s", "wikiversity": "v", "wikivoyage": "voy",
