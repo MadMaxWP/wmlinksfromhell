@@ -698,7 +698,7 @@ class MetadataStore:
         return True
 
     def _fetch_text(self, url: str, meta: dict, timeout: float, force: bool, retries: int) -> tuple[str, dict, bool]:
-        headers = {"User-Agent": "wmlinksfromhell/0.1.2 (Wikimedia link resolver)"}
+        headers = {"User-Agent": "wmlinksfromhell/0.1.3 (Wikimedia link resolver)"}
         if not isinstance(meta, dict):
             meta = {}
         if not force:
@@ -861,7 +861,7 @@ class MetadataStore:
         return True
 
     def _fetch_json(self, url: str, meta: dict, timeout: float, force: bool, retries: int) -> tuple[dict, dict, bool]:
-        headers = {"User-Agent": "wmlinksfromhell/0.1.2 (Wikimedia link resolver)"}
+        headers = {"User-Agent": "wmlinksfromhell/0.1.3 (Wikimedia link resolver)"}
         if not isinstance(meta, dict):
             meta = {}
         if not force:
