@@ -145,3 +145,18 @@ Compatibility aliases
 ``has_diff`` is an alias for ``is_diff``.
 
 ``has_action`` is an alias for ``is_action``.
+
+Membership matching
+-------------------
+
+``matches()`` and ``filter_links()`` accept criteria ending in ``_in`` to match
+an attribute against multiple acceptable values, for example
+``dbname_in={"enwiki", "dewiki"}``.
+
+Label editing
+-------------
+
+``WMLink.set_label()`` changes only the visible label while preserving the
+existing target. Passing ``None`` removes the label. ``set_interwiki()`` and
+``convert("interwiki")`` accept ``long_project_prefix=True`` to use the full
+project name for project/language targets.
