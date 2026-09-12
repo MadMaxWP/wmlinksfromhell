@@ -61,6 +61,19 @@ print(result.title)         # Apple
 print(result.url)           # https://en.wikipedia.org/wiki/Apple
 ```
 
+Use the full project name for project/language interwiki output when needed:
+
+```python
+result = wmlinksfromhell.resolve_url(
+    "https://hi.wikipedia.org/wiki/Apple",
+    long_project_prefix=True,
+)
+
+print(result.canonical_interwiki)  # wikipedia:hi:Apple
+```
+
+The short form remains the default, and `wikipedia:hi:Apple` is accepted as input.
+
 Parse links from MediaWiki text:
 
 ```python
@@ -145,7 +158,10 @@ code.filter_links(wiki_only=True)
 code.filter_links(interwiki_only=True)
 code.filter_links(local_only=True)
 code.filter_links(external_only=True)
+code.filter_links(dbname_in={"enwiki", "dewiki"})
 ```
+
+`code.destinations` returns the resolved destinations for parsed links.
 
 Links inside HTML comments are ignored by default. Include them when needed:
 
@@ -175,6 +191,32 @@ link.matches(dbname="enwiki", title="Apple")
 link.set_url()
 link.set_interwiki()
 link.set_local(source="enwiki")
+link.set_label("New label")
+```
+
+## Metadata and serialization
+
+Metadata can be enumerated without reaching into private state:
+
+```python
+metadata = wmlinksfromhell.MetadataStore()
+wmlinksfromhell.wikis(metadata)
+metadata.wikis_for_family("wikipedia")
+metadata.languages()
+metadata.canonical_namespaces("enwiki")
+metadata.interwiki_map("enwiki").prefixes()
+```
+
+`Destination` objects can be reconstructed from `as_dict()` output, and
+`ResolutionResult` objects can be serialized directly with `as_json()`.
+
+## Command line
+
+Resolve a value from the command line:
+
+```bash
+python -m wmlinksfromhell resolve "w:en:Apple"
+python -m wmlinksfromhell resolve "Apple" --source enwiki --json
 ```
 
 ## Pywikibot
