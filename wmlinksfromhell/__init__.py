@@ -26,6 +26,10 @@ def wiki(dbname: str, metadata: MetadataStore = None) -> WikiInfo:
     return result
 
 
+def wikis(metadata: MetadataStore = None) -> tuple[WikiInfo, ...]:
+    return (metadata or MetadataStore()).all_wikis()
+
+
 def interwiki(dbname: str, metadata: MetadataStore = None, source=None) -> InterwikiInfo:
     result = (metadata or MetadataStore()).interwiki(dbname, source=source)
     if result is None:
@@ -41,33 +45,33 @@ def link(dbname: str, title: str, label: str = None, metadata: MetadataStore = N
     return wiki(dbname, metadata=metadata).link(title, label=label, metadata=metadata, source=source)
 
 
-def resolve_url(value: str, source=None, metadata: MetadataStore = None) -> ResolutionResult:
-    return Resolver(metadata).resolve_url(value, source=source)
+def resolve_url(value: str, source=None, metadata: MetadataStore = None, long_project_prefix: bool = False) -> ResolutionResult:
+    return Resolver(metadata).resolve_url(value, source=source, long_project_prefix=long_project_prefix)
 
 
-def resolve_interwiki(value: str, source=None, metadata: MetadataStore = None) -> ResolutionResult:
-    return Resolver(metadata).resolve_interwiki(value, source=source)
+def resolve_interwiki(value: str, source=None, metadata: MetadataStore = None, long_project_prefix: bool = False) -> ResolutionResult:
+    return Resolver(metadata).resolve_interwiki(value, source=source, long_project_prefix=long_project_prefix)
 
 
 def to_url(destination: Destination, metadata: MetadataStore = None) -> str:
     return Resolver(metadata).to_url(destination)
 
 
-def to_interwiki(destination: Destination, source=None, metadata: MetadataStore = None) -> str:
-    return Resolver(metadata).to_interwiki(destination, source=source)
+def to_interwiki(destination: Destination, source=None, metadata: MetadataStore = None, long_project_prefix: bool = False) -> str:
+    return Resolver(metadata).to_interwiki(destination, source=source, long_project_prefix=long_project_prefix)
 
 
 def to_local(destination: Destination, source=None, metadata: MetadataStore = None) -> str:
     return Resolver(metadata).to_local(destination, source=source)
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 __all__ = [
-    "parse", "parse_page", "resolve", "resolve_url", "resolve_interwiki", "to_url", "to_interwiki", "to_local", "wiki", "interwiki", "url", "link", "Code", "Link", "Wiki", "Metadata", "Result", "WMCode", "WMLink", "Resolver", "ResolutionResult", "MetadataStore", "MetadataCache",
+    "parse", "parse_page", "resolve", "resolve_url", "resolve_interwiki", "to_url", "to_interwiki", "to_local", "wiki", "wikis", "interwiki", "url", "link", "Code", "Link", "Wiki", "Metadata", "Result", "WMCode", "WMLink", "Resolver", "ResolutionResult", "MetadataStore", "MetadataCache",
     "InterwikiMap", "InterwikiEntry", "InterwikiInfo", "Destination", "DestinationType", "ResolutionStatus", "SyntaxType", "WikiInfo",
     "Error", "WMLinksFromHellError", "WMLinkFromHellError", "ConversionError", "MetadataMissingError", "CacheError", "SourceResolutionError", "ResolutionError",
 ]
 
 
-def resolve(value: str, source=None, metadata: MetadataStore = None) -> ResolutionResult:
-    return Resolver(metadata).resolve(value, source=source)
+def resolve(value: str, source=None, metadata: MetadataStore = None, long_project_prefix: bool = False) -> ResolutionResult:
+    return Resolver(metadata).resolve(value, source=source, long_project_prefix=long_project_prefix)
