@@ -50,3 +50,27 @@ def test_as_dict_and_as_json_roundtrip_shape():
     assert data["destination_type"] == "wiki"
     assert data["dbname"] == "enwiki"
     assert isinstance(dest.as_json(), str)
+
+
+def test_destination_from_dict_round_trips_as_dict():
+    dest = Destination(
+        destination_type=DestinationType.WIKI,
+        dbname="enwiki",
+        title="Café",
+        query_parameters=(("a", "1"), ("b", "2")),
+    )
+    restored = Destination.from_dict(dest.as_dict())
+
+    assert restored == dest
+    assert restored.destination_type is DestinationType.WIKI
+    assert restored.query_parameters == (("a", "1"), ("b", "2"))
+
+
+def test_destination_type_properties():
+    wiki = Destination(destination_type=DestinationType.WIKI)
+    external = Destination(destination_type=DestinationType.EXTERNAL)
+    unknown = Destination(destination_type=DestinationType.UNKNOWN)
+
+    assert wiki.is_wiki and not wiki.is_external and not wiki.is_unknown
+    assert external.is_external and not external.is_wiki and not external.is_unknown
+    assert unknown.is_unknown and not unknown.is_wiki and not unknown.is_external
