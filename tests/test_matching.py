@@ -74,3 +74,18 @@ def test_match_same_page_ignores_fragment(metadata):
     links = _links("[[w:en:Apple#History]] [[w:en:Apple]]", metadata=metadata)
     assert links[0].matches(same_page_as=links[1].destination)
     assert not links[0].matches(destination=links[1].destination)
+
+
+def test_matches_membership_suffix(metadata):
+    links = _links("[[w:en:Apple]] [[w:de:Beispiel]] [[w:fr:Paris]]", metadata=metadata)
+
+    matched = [link for link in links if link.matches(dbname_in={"enwiki", "frwiki"})]
+
+    assert [link.dbname for link in matched] == ["enwiki", "frwiki"]
+    assert links[0].matches(destination_type_in={wm.DestinationType.WIKI})
+
+
+def test_filter_links_supports_membership_suffix(metadata):
+    code = wm.parse("[[w:en:Apple]] [[w:de:Beispiel]] [[w:fr:Paris]]", metadata=metadata)
+
+    assert [link.dbname for link in code.filter_links(dbname_in={"dewiki", "frwiki"})] == ["dewiki", "frwiki"]
